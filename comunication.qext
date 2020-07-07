@@ -1,0 +1,21 @@
+{
+    "bundle": {
+        "id": "NTT-extension",
+        "name": "NTT Estensioni Custom",
+        "description": "Collezione di Estensioni sviluppate per esigenze particolari"
+    },
+    "name": "Selezioni",
+    "description": "Test D3FC",
+    "type": "visualization",
+    "version": "1.0.0",
+    "icon": "extension",
+    "author": "Luca Mazzarella",
+    "email": "mazzarellaluca.ma@gmail.com",
+    "homepage": "",
+    "keywords": "qlik-sense, visualization",
+    "license": "",
+    "repository": "",
+    "dependencies": {
+        "qlik-sense": ">=3.0.x"
+    }
+}
