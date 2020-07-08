@@ -4,8 +4,8 @@
         "name": "NTT Estensioni Custom",
         "description": "Collezione di Estensioni sviluppate per esigenze particolari"
     },
-    "name": "Selezioni",
-    "description": "Test D3FC",
+    "name": "Comunication ",
+    "description": "Estensione che, dato un elenco di campi da monitorare, intercetta le selezioni attive e le invia tramite postmessage",
     "type": "visualization",
     "version": "1.0.0",
     "icon": "extension",

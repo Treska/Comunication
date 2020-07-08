@@ -1,192 +1,237 @@
 define(['qlik'],
     function (qlik) {
+
+        async function getUser(){
+            let promise = new Promise((res, rej) => {
+              res(qlik.getGlobal().getAuthenticatedUser().then(x=> {return x}));
+          });
+           // wait until the promise returns us a value
+            let result = await promise;
+
+            return result;
+
+        };
+
         return {
             initialProperties: {
-				qHyperCubeDef: {
-					qInitialDataFetch: [{
-						qWidth: 9,
-						qHeight: 50
-					}]
-				}
-			},
-			definition: {
-				type: "items",
-				component: "accordion",
-				items: {
-					dimensions: {
-						uses: "dimensions",
-						min: 0,
-						max:0
-					},
-					measures: {
-						uses: "measures",
-						min: 1,
-						max:20
-                    },
-                }
-            },
-            paint: function($element){
-               
-                var app = qlik.currApp();
-                $element.find('#status').remove();
-                $element.append('<div id="status"></div>');
-                var JsonVariable =new Object;
-                var appId = qlik.currApp().id;
-                var retriveInformation = function(){
-//                var url ="ws://localhost:4848/app/C%3A%5CUsers%5CInvestech%5CDocuments%5CQlik%5CSense%5CApps%5C____________minigrafico.qvf"   
-                var url = "wss://nextlevelreporting-dev.enel.com/nlr-dev-adfs/app/"+appId;
-                var ws = new WebSocket(url);
-                // var opendoc = {
-                //     "method": "OpenDoc",
-                //     "handle": -1,
-                //     "params": [
-                //         "C:\\Users\\Investech\\Documents\\Qlik\\Sense\\Apps\\____________minigrafico.qvf"
-                //     ],
-                //     "outKey": -1,
-                //     "id": 1,
-                //     type:"open"
-                // }
-                var opendoc = {
-                    "method": "OpenDoc",
-                    "handle": -1,
-                    "params": {
-                        "qDocName": appId
-                    },
-                    "outKey": -1,
-                    "id":1,
-                    type:"open"
-                    
-                };
-                var createSession = {
-                    "method": "CreateSessionObject",
-                    "handle": 1,
-                    "params": [
-                        {
-                            "qInfo": {
-                                "qType": "CurrentSelection"
-                            },
-                            "qSelectionObjectDef": {}
+                liste: {
+                    uno: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
                         },
+                    },
+                    due: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
+                        },
+                    },
+                    tre: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
+                        },
+                    },
+                    quattro: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
+                        },
+                    },
+                    cinque: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
+                        },
+                    },
+                    sei: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
+                        },
+                    },
+                    sette: {
+                        qListObjectDef: {
+                            qShowAlternatives: true,
+                            //qFrequencyMode: "V",
+                            qInitialDataFetch: [{
+                                qWidth: 3,
+                                qHeight: 20
+                            }],
+                            qSortByState: 0,
+                        },
+                    },
+                },
+                variableValue: {},
+                maxLimitvariableValue: {},
+            },
+                definition: {
+                	type: "items",
+                	component: "accordion",
+                	items: {
+                		dim: {
+                			type: "items",
+                			label: "Dim",
+                			ref: "liste.uno.qListObjectDef",
+                			min: 0,
+                			max: 2,
+                			items: {
+                				field: {
+                					type: "string",
+                					expression: "optional",
+                					expressionType: "dimension",
+                					ref: "liste.uno.qListObjectDef.qDef.qFieldDefs.0",
+                					label: "Field or variable name",
+                					// show: function ( data ) {
+                					// 	return data.qListObjectDef && !data.qListObjectDef.qLibraryId;
+                					// },
+                			},
+                        },
+                    },
+                        dim2: {
+                			type: "items",
+                			label: "Dim2",
+                			ref: "liste.due.qListObjectDef",
+                			min: 0,
+                			max: 2,
+                			items: {
+                				field: {
+                					type: "string",
+                					expression: "optional",
+                					expressionType: "dimension",
+                					ref: "liste.due.qListObjectDef.qDef.qFieldDefs.0",
+                					label: "Field or variable name",
+                					// show: function ( data ) {
+                					// 	return data.qListObjectDef && !data.qListObjectDef.qLibraryId;
+                					// },
+                			},
+                        },
+                    },
+            },
+        },
+            paint: function ($element, layout) {
+
+                /**
+                 * Inizializzazioni delle variabili
+                 */
+
+                var app = qlik.currApp();
+                var JsonToSend =new Object;
+
+                /**
+                 * Conservo le informazioni delle variabili appId e sheetId contenute nel localStorage
+                 * in variabili di appoggio per confrontare cambiamenti rispetto all'ultima esecuzione
+                 */
+
+                var appIdOld = localStorage.appId;
+                var sheetIdOld = localStorage.sheetId;
+                localStorage.appId =  qlik.currApp().id;
+                localStorage.sheetId = qlik.navigation.getCurrentSheetId().sheetId;
+                var messageType;
+                
+                /**
+                 * Casistiche:
+                 *  1) appId precedente  uguale ad appId corrente e Sheetid precedente uguale al precedente
+                 *     messaggio = page_filters
+                 *  2) appId corrente diverso da quello precedente
+                 *     messaggio = change_app
+                 *  3) sheetId corrente diverso da quello precedente
+                 *     messageType =  'change_sheet';
+                 *  4) tutti gli altri casi si tratta di cambio filtri e quindi il messaggio è 
+                 *     messageType =  'page_filters';
+                 */
+
+                if(localStorage.appId == appIdOld && sheetIdOld == localStorage.sheetId){
+                    messageType = 'page_filters';
+                } else if (localStorage.appId != appIdOld) {
+                    messageType = 'change_app';
+                } else if (localStorage.sheetId !=sheetIdOld){
+                    messageType =  'change_sheet';
+                } else {
+                    messageType =  'page_filters';
+                }
+
+                /**
+                 * costruzione array dei filtri partendo dalle singole liste
+                 */
+
+                var liste = layout.liste;
+                for( var element in liste){
+                    if(liste[element].qListObject.qDataPages.length !== 0) {
+                        var newObj = new Object;
+                        newObj.filterName = liste[element].qListObject.qDimensionInfo.qFallbackTitle;
+                        var newArray =[];
+                        liste[element].qListObject.qDataPages[0].qMatrix.forEach(x => {
+                            newArray.push((x.qState ==="S" ? x.qText)
+                        });
+                        console.log(newArray);
+                    }
+                }
+                var filters = [];
+
+                // liste.forEach(element => {
+                //     if(element.qListObject.qDataPages.length !== 0){
+                //         var newObj = new Object;
+                //         newObj.filterName = element.qListObject.qDimensionInfo.qFallbackTitle;
                         
-                    ],
-                    "outKey": -1,
-                    "id": 2
-                };
+                //         var newArray =element.qListObject.qDataPages[0].qMatrix.map(x => x.qState == 'S');
+                //         console.log(newArray);
+                //     }
+                // });
+              
+                var directory = 'enelint';
+                var nodeId = '';
+                var serviceProvider = 'Qlik';
+
+                
+                /**
+                 * costruzione del json da inviare tramite postMessage
+                 * 
+                 */
+                getUser().then(user => {JsonToSend.userId = user.qReturn;})
+                        .then(() => JsonToSend.appId =localStorage.appId) 
+                        .then(() => JsonToSend.messageType = messageType)
+                        .then(() => JsonToSend.directory =directory)
+                        .then(() => JsonToSend.nodeId =nodeId)
+                        .then(() => JsonToSend.serviceProvider = serviceProvider)
+                        .then(() => JsonToSend.sheetId= localStorage.sheetId)
+                        ;
 
                
-                var getLayout = {
-                    "method": "GetLayout",
-                    "handle": 2,
-                    "params": [],
-                    "outKey": -1,
-                    "id": 3
-                };
-                ws.onmessage = function (event) {
-                    
-                    var msg = JSON.parse(event.data);
-                    if(msg.method =="OnAuthenticationInformation"){
-                    	JsonVariable.userId = msg.params.userId;
-                    }
-
-                  
-                    switch(msg.id) {
-                  
-                      case 1:
-                      
-                      ws.send(JSON.stringify(createSession));
-                      
-                  
-                      break;
-                  
-                      case 2:
-                      ws.send(JSON.stringify(getLayout));
-                      break;	 
-                  
-                  
-                      case 3:
-                        var appIdOld = localStorage.appId;
-                        var sheetIdOld = localStorage.sheetId;
-                        localStorage.appId =  appId;
-                        localStorage.sheetId = qlik.navigation.getCurrentSheetId().sheetId;
-                        var messageType = ((localStorage.appId == appIdOld && sheetIdOld == localStorage.sheetId) ? 'page_filters' : (localStorage.appId != appIdOld ? 'change_app' :(localStorage.sheetId !=sheetIdOld ? 'change_sheet' : 'page_filters')));
 
 
-                    //   $('head').find('#EvaQlikVariable').append('var selectionAppId ="'+appId+'";');
-                    //   $('head').find('#EvaQlikVariable').append('var selectionSheetId ="'+qlik.navigation.getCurrentSheetId().sheetId+'";');
-                    //   console.log('app old:',selectionAppIdOld,' app:',appId);
-                    //   console.log('sheet old:',selectionSheetIdOld,' sheet:',qlik.navigation.getCurrentSheetId().sheetId);
-                    //  JsonVariable.userId ='';
-                      JsonVariable.directory ='enelint';
-                      JsonVariable.nodeId =''; // da chiedere cosa sia
-                      JsonVariable.serviceProvider = 'Qlik';
-                      JsonVariable.messageType = messageType;// ((selectionAppIdOld==undefined && selectionSheetIdOld ==undefined) ? 'page_filters' :(appId !=selectionAppIdOld ? "change_app" : qlik.navigation.getCurrentSheetId().sheetId != selectionSheetIdOld ? "change_sheet" : "page_filters"   ));
-                      JsonVariable.appId = appId;
-                      JsonVariable.sheetId = qlik.navigation.getCurrentSheetId().sheetId;
-                      JsonVariable.filter = [];
-                      msg.result.qLayout.qSelectionObject.qSelections.forEach(function(d){
-                            var values = [];
-                            
-                            d.qSelectedFieldSelectionInfo.forEach(function(d){
-                                values.push(d.qName)
-                            });
 
-                            var valuesAmount = (values.length == 1 ? 'single' : 'multiple');
-
-                            JsonVariable.filter.push({
-                                filterName:d.qField,
-                                filterValues:{
-                                    values:values,
-                                    valuesAmount:valuesAmount,
-                                    valuesType: "inclusive"
-                                },
-                                options: {
-                                    otherOptions: {}
-                                },
-                                states: []
-                    
-                            })
-                      });
-                      
-                      
-                      $element.find('#status').append(JSON.stringify(JsonVariable));
-                      console.log(JsonVariable);
-                      var parentWindow = window.parent; 
-                    /*  https://eva-dev.enelint.global/wildfly*/
-                        parentWindow.postMessage(JsonVariable,'https://e-report-dev.enel.com/wildfly/');
-                        parentWindow.postMessage(JsonVariable,'https://eva-dev.enelint.global/wildfly/');
-                    //   parentWindow.postMessage(window.parent,"https://nextlevelreporting-dev.enel.com/nlr-dev-adfs/app/"+appId);
-
-                      break;
-                     
-                       }
-                    }
-                    ws.onopen = function() {
-                        ws.send(JSON.stringify(opendoc));
-                        //console.log('apro la app');
-                    }
-                    
-                     ws.onclose = function()
-                                   { 
-                                      // websocket is closed.
-                                    //   console.log("Connessione chiusa..."); 
-                                   };
-                }
-                retriveInformation();
-
-                window.addEventListener("message", (event) => {
-                    var selections = JSON.parse(event.data);
-                    
-                    qlik.navigation.gotoSheet(selections.sheetId);
-                    
-                    selections.filter.forEach(function(d){
-                        var qField = d.filterName;
-                        var value = d.filterValues.values;
-                        app.field(qField).selectValues(value, false, true);
-                    });
-
-
-                    
-                }, false);
             }
         }
-});
+    });
